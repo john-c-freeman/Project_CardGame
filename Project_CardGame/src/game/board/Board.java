@@ -2,6 +2,7 @@ package game.board;
 
 import game.Alliance;
 import game.card.Card;
+import static game.Alliance.*;
 
 /**
  * This class represents the game board.
@@ -25,7 +26,7 @@ public class Board {
      * @param location The location for the card to be placed
      */
     public void placeCard(Card card, int location){
-        if ((card.getAlliance() == Alliance.PLAYER && location <= 3) || (card.getAlliance() == Alliance.COMPUTER && location > 3)) {
+        if ((card.getAlliance() == PLAYER && location <= 3) || (card.getAlliance() == COMPUTER && location > 3)) {
             cardLocations[location] = card;
         } else {
             throw new IllegalArgumentException("The provided location belongs to the opponent.");
@@ -39,7 +40,7 @@ public class Board {
      */
     public Card getEnemyCard(Card card){
 
-        if (card.getAlliance() == Alliance.COMPUTER){
+        if (card.getAlliance() == COMPUTER){
             int cardLocation = card.getCardLocation();
             if (cardLocation > 7) { //Card is on the top row.
                 return cardLocations[cardLocation - 8];
@@ -59,5 +60,26 @@ public class Board {
      */
     public Card getCardAtLocation(int location){
         return cardLocations[location];
+    }
+
+    /**
+     * Returns a boolean stating whether the given location is valid for the given card.
+     */
+    public boolean isValidLocation(Alliance alliance, int cardLocation){
+        return (alliance == COMPUTER && cardLocation >= 4 && cardLocation <= 11) ||
+                (alliance == PLAYER && cardLocation >= 0 && cardLocation <= 3);
+    }
+
+    /**
+     * Returns a boolean stating whether the given location is occupied.
+     * @param cardLocation
+     * @return
+     */
+    public boolean isLocationOccupied(int cardLocation){
+        return cardLocations[cardLocation] != null;
+    }
+
+    public void setCardAtLocations(){
+
     }
 }
