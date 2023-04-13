@@ -1,66 +1,100 @@
 package game;
 
-import game.board.Board;
-import game.card.Card;
-import game.card.Deck;
+import game.card.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * A class representing a player.
  */
 public class Player {
+    public static final Board board = new Board();
+    private final List<Card> deck = new ArrayList<>();
+    private final List<Card> hand = new ArrayList<>();
+    private final Alliance alliance;
     private final Random rand = new Random();
-    private final Deck deck;
     private int health;
     private int mana;
     private int numberOfTurns = 0;
-    private final List<Card> hand;
-    public static final Board board = new Board();
 
     /**
      * Constructs a new Player
-     * @param deck A Deck object
+     *
      * @param health The player's health
-     * @param mana The player's mana
-     * @param hand A List of Cards representing the hand the player is playing with.
+     * @param mana   The player's mana
      */
-    public Player(Deck deck, int health, int mana, List<Card> hand) {
-        this.deck = deck;
+    public Player(int health, int mana, Alliance alliance) {
         this.health = health;
         this.mana = mana;
-        this.hand = hand;
+        this.alliance = alliance;
+        initializeRandomDeck();
+        initializeHand();
+    }
+
+    /**
+     * Initializes the player's hand by removing 5 cards from the deck.
+     */
+    private void initializeHand() {
+        for (int i = 0; i < 5; i++) {
+            hand.add(drawCard());
+        }
+    }
+
+    /**
+     * Initializes a deck of random cards.
+     * //TODO make more cards to complete this method
+     */
+    private void initializeRandomDeck() {
+        int numberOfUniqueCards = 6;
+        List<Card> uniqueCards = List.of(new Bear(alliance, this), new Wolf(alliance, this), new Squirrel(alliance,
+                this), new Cat(alliance, this), new Crow(alliance, this), new Shark(alliance, this));
+        for (int i = 0; i < 10; i++) {
+            int r = rand.nextInt(numberOfUniqueCards);
+            deck.add(uniqueCards.get(r));
+            //uniqueCards.remove(r);
+            //numberOfUniqueCards--;
+        }
     }
 
     /**
      * Draws a random card from the players deck
+     *
      * @return A random card from the players deck
      */
-    public Card drawCard(){
-        return deck.drawCard();
+    public Card drawCard() {
+        //TODO check if the card is already in the player's hand?
+        int n = rand.nextInt(deck.size());
+        Card drawnCard = deck.get(n);
+        deck.remove(n);
+        return drawnCard;
     }
 
     /**
      * Returns the player's deck
+     *
      * @return the player's deck
      */
-    public List<Card> getDeck(){
-        return deck.getDeck();
+    public List<Card> getDeck() {
+        return this.deck;
     }
 
     /**
      * Returns the player's hand
+     *
      * @return the player's hand
      */
-    public List<Card> getHand(){
+    public List<Card> getHand() {
         return hand;
     }
 
     /**
      * Adds a card to the player's hand
+     *
      * @param card A Card
      */
-    public void setHand(Card card){
+    public void setHand(Card card) {
         hand.add(card);
     }
 
@@ -88,11 +122,7 @@ public class Player {
         this.numberOfTurns = numberOfTurns;
     }
 
-    public Random getRand() {
-        return rand;
-    }
-
-    public Board board(){
-        return board;
+    public Alliance getAlliance() {
+        return alliance;
     }
 }

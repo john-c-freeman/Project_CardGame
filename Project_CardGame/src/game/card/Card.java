@@ -2,7 +2,7 @@ package game.card;
 
 import game.Alliance;
 import game.Player;
-import game.board.Board;
+import game.Board;
 
 public abstract class Card {
     private int power;
@@ -73,7 +73,7 @@ public abstract class Card {
      * @param cardLocation The location on the board. (Must align with the card's alliance or an IllegalArgumentException will be thrown)
      */
     public void setCardLocation(int cardLocation) {
-        if (!board.isValidLocation(alliance, cardLocation))
+        if (!board.isValidLocation(this, cardLocation))
             throw new IllegalArgumentException("Invalid card location");
         this.cardLocation = cardLocation;
     }
@@ -89,10 +89,8 @@ public abstract class Card {
         Card enemyCard = board.getEnemyCard(this);
         if (enemyCard != null) {
             enemyCard.setHealth(this.getPower() - enemyCard.getHealth());
-            //Set the enemy card to null if health is 0.
-            if (enemyCard.getHealth() <= 0) {
-                board.placeCard(null, enemyCard.cardLocation);
-            }
+            //Set the enemy card to null if health is less than or equal to 0.
+            if (enemyCard.getHealth() <= 0) board.setCardAtLocation(null, enemyCard.cardLocation);
         } else {
             enemyCard.getPlayer().setHealth(this.getPower() - enemyCard.getPlayer().getHealth());
         }

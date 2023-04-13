@@ -1,7 +1,8 @@
 package game;
 
 import game.card.Card;
-import game.card.Deck;
+import game.card.Bear;
+import game.card.Wolf;
 
 import java.util.List;
 import java.util.Random;
@@ -11,18 +12,17 @@ import java.util.Random;
  */
 public class Computer extends Player {
     private final Random rand = new Random();
+    Card[] tempCards = {new Bear(getAlliance(), this), new Wolf(getAlliance(), this)};
 
     /**
      * Constructs a new Computer opponent
-     *
-     * @param deck   A Deck object
-     * @param health The player's health
-     * @param mana   The player's mana
-     * @param hand   A List of Cards representing the hand the player is playing with.
+     * @param health   The Computer's health
+     * @param mana     The Computer's mana
      */
-    public Computer(Deck deck, int health, int mana, List<Card> hand) {
-        super(deck, health, mana, hand);
+    public Computer(int health, int mana) {
+        super(health, mana, Alliance.COMPUTER);
     }
+
 
     /**
      * Does a computer move.
@@ -31,13 +31,13 @@ public class Computer extends Player {
 
         //Get a random valid location
         int computerMoveLocation = rand.nextInt(4, 12);
-        while (!(board.isLocationOccupied(computerMoveLocation) && board.isValidLocation(Alliance.COMPUTER, computerMoveLocation))) {
+        while (!(board.isLocationOccupied(computerMoveLocation) && board.isValidLocation(tempCards[0], computerMoveLocation))) {
             computerMoveLocation = rand.nextInt(4, 12);
         }
 
         //Get a random card and place it on the board
         Card card = getHand().get(rand.nextInt(5));
-        board.placeCard(card, computerMoveLocation);
+        board.setCardAtLocation(card, computerMoveLocation);
 
         //Attack the player
         card.attack();
