@@ -1,5 +1,9 @@
 package gui;
 
+import game.Alliance;
+import game.Computer;
+import game.Player;
+
 import java.awt.Component;
 import java.awt.EventQueue;
 
@@ -21,11 +25,14 @@ import java.awt.event.ContainerEvent;
 @SuppressWarnings("serial")
 public class GuiBoard extends JFrame {
 
+	private final Player player = new Player(5, 5, Alliance.PLAYER);
+	private final Computer computer = new Computer(5, 5);
 	private JPanel contentPane;
 	private JTextField txtOpponentHealth;
 	private JTextField txtPlayerHealth;
 	private HandPanel panel_hand;
 	public static boolean hasDrawn = false;
+	private int turn;
 
 	/**
 	 * Launch the application.
@@ -127,11 +134,15 @@ public class GuiBoard extends JFrame {
 		return gbc_btnDraw;
 	}
 
+
+
 	/**
 	 * creates the "End Turn" button
 	 * @return
 	 */
 	private JButton create_endTurnBtn() {
+		final int PLAYER_TURN = 0;
+		final int COMPUTER_TURN = 1;
 		JButton btnEndTurn = new JButton("End Turn\r\n");
 		btnEndTurn.addActionListener(new ActionListener() {
 			/**
@@ -142,6 +153,15 @@ public class GuiBoard extends JFrame {
 				HandPanel.hasPlayed = false;
 				BattleAreaPanel.battleAreaButtons.forEach(x -> x.setSelected(false));
 
+				//Alternate turns and increase mana by number of turns
+				if (turn == PLAYER_TURN) {
+					player.setNumberOfTurns(player.getNumberOfTurns() + 1);
+					player.setMana(player.getNumberOfTurns());
+				} else if (turn == COMPUTER_TURN) {
+					computer.setNumberOfTurns(computer.getNumberOfTurns() + 1);
+					computer.setMana(computer.getNumberOfTurns());
+				}
+				turn = (turn == PLAYER_TURN) ? COMPUTER_TURN : PLAYER_TURN;
 			}
 		});
 		return btnEndTurn;
