@@ -11,7 +11,7 @@ public class Shark extends Card {
     /**
      * Constructs a new Shark
      */
-    public Shark(Alliance alliance, Player player) {
-        super(5, 5, 5, Ability.WATER, alliance, player);
+    public Shark(Alliance alliance) {
+        super(5, 5, 5, Ability.WATER, alliance);
     }
 }

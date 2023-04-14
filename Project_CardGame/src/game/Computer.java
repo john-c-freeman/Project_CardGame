@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class Computer extends Player {
     private final Random rand = new Random();
-    Card[] tempCards = {new Bear(getAlliance(), this), new Wolf(getAlliance(), this)};
+    Card[] tempCards = {new Bear(getAlliance()), new Wolf(getAlliance())};
 
     /**
      * Constructs a new Computer opponent
@@ -28,18 +28,21 @@ public class Computer extends Player {
      * Does a computer move.
      */
     public void doComputerMove() {
+        final Board board = new Board();
+        //Get a random card with mana less than or equal to the computer's mana.
+        Card card = getHand().get(rand.nextInt(5));
+        while (card.getMana() > getMana()) {
+            card = getHand().get(rand.nextInt(5));
+        }
 
-        //Get a random valid location
+        //Place the card at a random non-occupied location.
         int computerMoveLocation = rand.nextInt(4, 12);
         while (!(board.isLocationOccupied(computerMoveLocation) && board.isValidLocation(tempCards[0], computerMoveLocation))) {
             computerMoveLocation = rand.nextInt(4, 12);
         }
-
-        //Get a random card and place it on the board
-        Card card = getHand().get(rand.nextInt(5));
         board.setCardAtLocation(card, computerMoveLocation);
 
-        //Attack the player
-        card.attack();
+        //Attack the enemy card.
+        board.attackEnemy(card);
     }
 }

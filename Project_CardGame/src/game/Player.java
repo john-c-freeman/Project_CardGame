@@ -10,7 +10,6 @@ import java.util.Random;
  * A class representing a player.
  */
 public class Player {
-    public static final Board board = new Board();
     private final List<Card> deck = new ArrayList<>();
     private final List<Card> hand = new ArrayList<>();
     private final Alliance alliance;
@@ -48,8 +47,7 @@ public class Player {
      */
     private void initializeRandomDeck() {
         int numberOfUniqueCards = 6;
-        List<Card> uniqueCards = List.of(new Bear(alliance, this), new Wolf(alliance, this), new Squirrel(alliance,
-                this), new Cat(alliance, this), new Crow(alliance, this), new Shark(alliance, this));
+        List<Card> uniqueCards = List.of(new Bear(alliance), new Wolf(alliance), new Squirrel(alliance), new Cat(alliance), new Crow(alliance), new Shark(alliance));
         for (int i = 0; i < 10; i++) {
             int r = rand.nextInt(numberOfUniqueCards);
             deck.add(uniqueCards.get(r));

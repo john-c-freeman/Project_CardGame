@@ -11,7 +11,7 @@ public class Bear extends Card {
     /**
      * Constructs a new Bear
      */
-    public Bear(Alliance alliance, Player player) {
-        super(5, 5, 5, Ability.LAND, alliance, player);
+    public Bear(Alliance alliance) {
+        super(5, 5, 5, Ability.LAND, alliance);
     }
 }

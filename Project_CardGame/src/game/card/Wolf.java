@@ -13,7 +13,7 @@ public class Wolf extends Card {
     /**
      * Constructs a new Bear
      */
-    public Wolf(Alliance alliance, Player player) {
-        super(5, 5, 5, Ability.LAND, alliance, player);
+    public Wolf(Alliance alliance) {
+        super(5, 5, 5, Ability.LAND, alliance);
     }
 }

@@ -8,7 +8,7 @@ public class Crow extends Card {
     /**
      * Constructs a new Crow
      */
-    public Crow(Alliance alliance, Player player) {
-        super(5, 5, 5, Ability.AIR, alliance, player);
+    public Crow(Alliance alliance) {
+        super(5, 5, 5, Ability.AIR, alliance);
     }
 }

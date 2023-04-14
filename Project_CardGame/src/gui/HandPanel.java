@@ -73,6 +73,7 @@ public class HandPanel extends JPanel {
 				handToBattleArea(2);
 				handToBattleArea(3);
 			}
+
 			/**
 			 * 
 			 * @param areaIndex

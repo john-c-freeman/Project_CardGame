@@ -54,11 +54,6 @@ public class BattleAreaPanel extends JPanel {
 			battleAreaButtons.add(new JToggleButton());
 			add(battleAreaButtons.get(i));
 		}
-
-		
-
-
-
 	}
 
 }

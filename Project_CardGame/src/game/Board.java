@@ -12,9 +12,11 @@ import static game.Alliance.*;
  */
 public class Board {
     private final Card[] cardLocations = new Card[12];
+    private final Player player = new Player(5, 5, PLAYER);
+    private final Computer computer = new Computer(5, 5);
 
     /**
-     * Constructs the board
+     * Constructs the board and two players.
      */
     public Board(){}
 
@@ -49,9 +51,7 @@ public class Board {
      */
     public boolean isValidLocation(Card card, int cardLocation){
         if (cardLocation < 0 || cardLocation > 11) throw new IllegalArgumentException("Location out of bounds");
-
-        return (card.getAlliance() == COMPUTER && cardLocation >= 4 && cardLocation <= 11) ||
-                (card.getAlliance() == PLAYER && cardLocation >= 0 && cardLocation <= 3);
+        return (card.getAlliance() == COMPUTER && cardLocation >= 4) || (card.getAlliance() == PLAYER && cardLocation <= 3);
     }
 
     /**
@@ -73,6 +73,10 @@ public class Board {
         if (isValidLocation(card, location) && !isLocationOccupied(location)){
             cardLocations[location] = card;
             card.setCardLocation(location);
+
+            //Lower the players mana
+            if (card.getAlliance() == PLAYER) player.setMana(player.getMana() - card.getMana());
+            else computer.setMana(computer.getMana() - card.getMana());
         }
     }
 
@@ -82,5 +86,22 @@ public class Board {
      */
     public void removeCardAtLocation(int location) {
         cardLocations[location] = null;
+    }
+
+    /**
+     * Attacks the enemy card at the location opposite the card provided as argument.
+     * @param attackingCard The attacking card.
+     */
+    public void attackEnemy(Card attackingCard){
+        Card enemyCard = getEnemyCard(attackingCard);
+        if (enemyCard == null){
+            //If the enemy card is null, attack the enemy player.
+            if (attackingCard.getAlliance() == COMPUTER) player.setHealth(player.getHealth() - attackingCard.getPower());
+            else computer.setHealth(computer.getHealth() - attackingCard.getPower());
+        } else {
+            //If the enemy card is not null, attack the enemy card.
+            enemyCard.setHealth(enemyCard.getHealth() - attackingCard.getPower());
+            if (enemyCard.getHealth() <= 0) removeCardAtLocation(enemyCard.getCardLocation());
+        }
     }
 }
