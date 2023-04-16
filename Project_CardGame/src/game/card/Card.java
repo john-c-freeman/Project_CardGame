@@ -64,4 +64,13 @@ public abstract class Card {
     public void setCardLocation(int cardLocation) {
         this.cardLocation = cardLocation;
     }
+
+    /**
+     * Returns a String containing the card's health, name, and damage stats.
+     * @return the card's health, name, and damage stats.
+     */
+    @Override
+    public String toString() {
+        return "Health: " + getHealth() + " " + this.getClass().getSimpleName() + " Damage: " + getPower();
+    }
 }

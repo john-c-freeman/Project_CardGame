@@ -12,7 +12,6 @@ import java.util.Random;
  */
 public class Computer extends Player {
     private final Random rand = new Random();
-    Card[] tempCards = {new Bear(getAlliance()), new Wolf(getAlliance())};
 
     /**
      * Constructs a new Computer opponent
@@ -37,7 +36,7 @@ public class Computer extends Player {
 
         //Place the card at a random non-occupied location.
         int computerMoveLocation = rand.nextInt(4, 12);
-        while (!(board.isLocationOccupied(computerMoveLocation) && board.isValidLocation(tempCards[0], computerMoveLocation))) {
+        while (!(board.isLocationOccupied(computerMoveLocation) && board.isValidLocation(card, computerMoveLocation))) {
             computerMoveLocation = rand.nextInt(4, 12);
         }
         board.setCardAtLocation(card, computerMoveLocation);

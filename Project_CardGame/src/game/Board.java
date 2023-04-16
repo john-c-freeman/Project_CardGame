@@ -104,4 +104,20 @@ public class Board {
             if (enemyCard.getHealth() <= 0) removeCardAtLocation(enemyCard.getCardLocation());
         }
     }
+
+    /**
+     * Returns the player
+     * @return The player
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * Returns the computer
+     * @return The computer
+     */
+    public Computer getComputer() {
+        return computer;
+    }
 }

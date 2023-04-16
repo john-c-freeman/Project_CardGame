@@ -1,6 +1,7 @@
 package gui;
 
 import game.Alliance;
+import game.Board;
 import game.Computer;
 import game.Player;
 
@@ -25,8 +26,9 @@ import java.awt.event.ContainerEvent;
 @SuppressWarnings("serial")
 public class GuiBoard extends JFrame {
 
-	private final Player player = new Player(5, 5, Alliance.PLAYER);
-	private final Computer computer = new Computer(5, 5);
+	private final Board board = new Board();
+	private final Player player = board.getPlayer();
+	private final Computer computer = board.getComputer();
 	private JPanel contentPane;
 	private JTextField txtOpponentHealth;
 	private JTextField txtPlayerHealth;
