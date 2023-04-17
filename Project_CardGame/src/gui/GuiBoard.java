@@ -1,7 +1,6 @@
 package gui;
 
 import game.Alliance;
-import game.Board;
 import game.Computer;
 import game.Player;
 
@@ -22,19 +21,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class GuiBoard extends JFrame {
 
-	private final Board board = new Board();
-	private final Player player = board.getPlayer();
-	private final Computer computer = board.getComputer();
+	final static Player player = new Player(5, 5, Alliance.PLAYER);
+	private final Computer computer = new Computer(5, 5);
 	private JPanel contentPane;
 	private JTextField txtOpponentHealth;
 	private JTextField txtPlayerHealth;
 	private HandPanel panel_hand;
+	private JLabel lblTurnCount;
+	private JLabel lblMana;
 	public static boolean hasDrawn = false;
-	private int turn;
+	private int turn = 0;
 
 	/**
 	 * Launch the application.
@@ -65,6 +66,10 @@ public class GuiBoard extends JFrame {
 		GridBagLayout gbl_contentPane = create_guiBoardLayout();
 		contentPane.setLayout(gbl_contentPane);
 		
+		lblTurnCount = create_turnCount();
+		GridBagConstraints gbc_lblTurnCount = create_TurnCountConstraints();
+		contentPane.add(lblTurnCount, gbc_lblTurnCount);
+		
 		JLabel lblOpponentHealth = create_opponentHealthLbl();
 		GridBagConstraints gbc_lblOpponentHealth = create_opponentHealthLblConstraints();
 		contentPane.add(lblOpponentHealth, gbc_lblOpponentHealth);
@@ -84,10 +89,42 @@ public class GuiBoard extends JFrame {
 		JButton btnDraw = create_drawBtn();
 		GridBagConstraints gbc_btnDraw = create_drawBtnConstraints();
 		contentPane.add(btnDraw, gbc_btnDraw);
-
+		
+		lblMana = create_manaCount();
+		GridBagConstraints gbc_lblMana = create_manaCountConstraints();
+		contentPane.add(lblMana, gbc_lblMana);
+		
 		JLabel lblPlayerHealth = create_playerHealthLbl();
 		GridBagConstraints gbc_lblPlayerHealth = create_playerHeathLblConstraints();
 		contentPane.add(lblPlayerHealth, gbc_lblPlayerHealth);
+
+	}
+
+	private JLabel create_turnCount() {
+		JLabel lblTurnCount = new JLabel("Turn Count: " + turn);
+		lblTurnCount.setHorizontalAlignment(SwingConstants.LEFT);
+		return lblTurnCount;
+	}
+
+	private GridBagConstraints create_TurnCountConstraints() {
+		GridBagConstraints gbc_lblTurnCount = new GridBagConstraints();
+		gbc_lblTurnCount.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTurnCount.gridx = 1;
+		gbc_lblTurnCount.gridy = 0;
+		return gbc_lblTurnCount;
+	}
+
+	private JLabel create_manaCount() {
+		JLabel lblMana = new JLabel("Mana: " + Integer.toString(player.getMana()));
+		return lblMana;
+	}
+
+	private GridBagConstraints create_manaCountConstraints() {
+		GridBagConstraints gbc_lblMana = new GridBagConstraints();
+		gbc_lblMana.insets = new Insets(0, 0, 0, 5);
+		gbc_lblMana.gridx = 1;
+		gbc_lblMana.gridy = 3;
+		return gbc_lblMana;
 	}
 
 	/**
@@ -136,8 +173,6 @@ public class GuiBoard extends JFrame {
 		return gbc_btnDraw;
 	}
 
-
-
 	/**
 	 * creates the "End Turn" button
 	 * @return
@@ -154,16 +189,21 @@ public class GuiBoard extends JFrame {
 				hasDrawn = false;
 				HandPanel.hasPlayed = false;
 				BattleAreaPanel.battleAreaButtons.forEach(x -> x.setSelected(false));
+				turn++;
+				player.setMana(player.getMana() + turn);
+				
+				lblTurnCount.setText("Turn Count: " + turn);
+				lblMana.setText("Mana: " + Integer.toString(player.getMana()));
 
 				//Alternate turns and increase mana by number of turns
 				if (turn == PLAYER_TURN) {
 					player.setNumberOfTurns(player.getNumberOfTurns() + 1);
-					player.setMana(player.getNumberOfTurns());
+					//player.setMana(player.getNumberOfTurns());
 				} else if (turn == COMPUTER_TURN) {
 					computer.setNumberOfTurns(computer.getNumberOfTurns() + 1);
 					computer.setMana(computer.getNumberOfTurns());
 				}
-				turn = (turn == PLAYER_TURN) ? COMPUTER_TURN : PLAYER_TURN;
+				//turn = (turn == PLAYER_TURN) ? COMPUTER_TURN : PLAYER_TURN;
 			}
 		});
 		return btnEndTurn;
