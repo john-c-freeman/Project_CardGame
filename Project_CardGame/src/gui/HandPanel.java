@@ -39,6 +39,7 @@ public class HandPanel extends JPanel {
 	public static List<Boolean> listBattleAreaSlotAvailable = new ArrayList<>(Arrays.asList(true, true, true, true));; // Check if there is a card already on the board for that index
 	public static boolean hasPlayed = false; // Once the player places a card, they can no longer place a card until the next turn
 	public int cardCounter = 0;
+	public static boolean placementChosen;
 	/**
 	 * 
 	 * Creates the panel. (Constructor)
@@ -70,7 +71,8 @@ public class HandPanel extends JPanel {
 	public JButton create_Card() {
 		JButton btnNewButton = new JButton();
 		Card card = GuiBoard.player.drawCard();
-		
+		placementChosen = false;
+
 		btnNewButton.setText(card.toString() + " | cost: " + Integer.toString(card.getMana()));
 		btnNewButton.setPreferredSize(new Dimension(150, 150)); // set's the button to be a reasonable size
 		cardCounter++;
@@ -84,9 +86,10 @@ public class HandPanel extends JPanel {
 					handToBattleArea(1);
 					handToBattleArea(2);
 					handToBattleArea(3);
-					
-					btnNewButton.setVisible(false);; // Hides the card so it no longer appears in players hand
-					listHand.remove(btnNewButton);
+					if (placementChosen == true) { // the placement on the board has to be chosen if the card is going to disappear
+						btnNewButton.setVisible(false);; // Hides the card so it no longer appears in players hand
+						listHand.remove(btnNewButton);
+					}
 				}
 	
 			}
@@ -104,6 +107,7 @@ public class HandPanel extends JPanel {
 						BattleAreaPanel.battleAreaButtons.get(areaIndex).setSelected(false);
 						listBattleAreaSlotAvailable.set(areaIndex, false);
 					    GuiBoard.player.setMana(GuiBoard.player.getMana()-card.getMana());
+					    placementChosen = true;
 
 					}
 				}
