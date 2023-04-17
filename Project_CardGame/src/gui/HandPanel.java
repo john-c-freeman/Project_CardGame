@@ -89,6 +89,8 @@ public class HandPanel extends JPanel {
 					if (placementChosen == true) { // the placement on the board has to be chosen if the card is going to disappear
 						btnNewButton.setVisible(false);; // Hides the card so it no longer appears in players hand
 						listHand.remove(btnNewButton);
+						GuiBoard.lblMana.setText("Mana: " + Integer.toString(GuiBoard.player.getMana()));
+
 					}
 				}
 	
@@ -103,7 +105,7 @@ public class HandPanel extends JPanel {
 					if (BattleAreaPanel.battleAreaButtons.get(areaIndex).isSelected() 
 							&& listBattleAreaSlotAvailable.get(areaIndex) == true ) {
 						BattleAreaPanel.battleAreaButtons.get(areaIndex).setText(card.toString());  
-						hasPlayed = true;
+						//hasPlayed = true;
 						BattleAreaPanel.battleAreaButtons.get(areaIndex).setSelected(false);
 						listBattleAreaSlotAvailable.set(areaIndex, false);
 					    GuiBoard.player.setMana(GuiBoard.player.getMana()-card.getMana());
