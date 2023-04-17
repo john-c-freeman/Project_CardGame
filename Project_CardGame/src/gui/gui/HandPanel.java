@@ -12,7 +12,10 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 
+import game.Alliance;
 import game.Player;
+import game.card.Bear;
+import game.card.Card;
 
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -66,36 +69,42 @@ public class HandPanel extends JPanel {
 	 */
 	public JButton create_Card() {
 		JButton btnNewButton = new JButton();
-
-		btnNewButton.setText("card" + cardCounter);
-		btnNewButton.setPreferredSize(new Dimension(100, 100)); // set's the button to be a reasonable size
+		Card card = GuiBoard.player.drawCard();
+		
+		btnNewButton.setText(card.toString() + " | cost: " + Integer.toString(card.getMana()));
+		btnNewButton.setPreferredSize(new Dimension(150, 150)); // set's the button to be a reasonable size
 		cardCounter++;
 		listHand.add(btnNewButton); // Adds a new JButton (Card) to the Hand List
 		add(btnNewButton); // Add that same new Jbutton (Card) to the JPanel
 		
 		btnNewButton.addActionListener(new ActionListener() { // Once the card is chosen
 			public void actionPerformed(ActionEvent e) {
-				handToBattleArea(0); // Play the card to the Battle Area index 0 
-				handToBattleArea(1);
-				handToBattleArea(2);
-				handToBattleArea(3);
-				btnNewButton.setVisible(false);; // Hides the card so it no longer appears in players hand
-				listHand.remove(btnNewButton);
+				if ( GuiBoard.player.getMana() >= card.getMana()) {
+					handToBattleArea(0); // Play the card to the Battle Area index 0 
+					handToBattleArea(1);
+					handToBattleArea(2);
+					handToBattleArea(3);
+					
+					btnNewButton.setVisible(false);; // Hides the card so it no longer appears in players hand
+					listHand.remove(btnNewButton);
+				}
+	
 			}
 
 			/**
-			
 			 * @param areaIndex
 			 * @param actionListener 
 			 */
 			private void handToBattleArea(int areaIndex) {
 				if (hasPlayed == false) {
 					if (BattleAreaPanel.battleAreaButtons.get(areaIndex).isSelected() 
-							&& listBattleAreaSlotAvailable.get(areaIndex) == true) {
-						BattleAreaPanel.battleAreaButtons.get(areaIndex).setText(btnNewButton.getActionCommand());   //ERROR it always takes the last card pulled
+							&& listBattleAreaSlotAvailable.get(areaIndex) == true ) {
+						BattleAreaPanel.battleAreaButtons.get(areaIndex).setText(card.toString());  
 						hasPlayed = true;
 						BattleAreaPanel.battleAreaButtons.get(areaIndex).setSelected(false);
 						listBattleAreaSlotAvailable.set(areaIndex, false);
+					    GuiBoard.player.setMana(GuiBoard.player.getMana()-card.getMana());
+
 					}
 				}
 			}
