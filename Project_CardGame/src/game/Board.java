@@ -1,19 +1,23 @@
 package game;
 
+import game.card.Bobcat;
 import game.card.Card;
+
+import java.util.Random;
+
 import static game.Alliance.*;
 
 /**
  * This class represents the game board.
  * The locations start at the bottom left and go from left to right like so:
- * <li>8  9  10  11</li>
  * <li>4  5  6   7</li>
  * <li>0  1  2   3</li>
  */
 public class Board {
-    private final Card[] cardLocations = new Card[12];
+    private final Card[] cardLocations = new Card[8];
     private final Player player = new Player(5, 5, PLAYER);
     private final Computer computer = new Computer(5, 5);
+    private final Random rand = new Random();
 
     /**
      * Constructs the board and two players.
@@ -27,9 +31,8 @@ public class Board {
      */
     public Card getEnemyCard(Card card){
         int location = card.getCardLocation();
-        if (card.getAlliance() == COMPUTER){
-            if (location >= 8) return getCardAtLocation(location - 8);
-            if (location >= 4) return getCardAtLocation(location - 4);
+        if (card.getAlliance() == COMPUTER && location >= 4){
+            return getCardAtLocation(location - 4);
         }
         return getCardAtLocation(location + 4);
     }
@@ -50,22 +53,21 @@ public class Board {
      * @return Boolean stating whether the given location is valid for the given card.
      */
     public boolean isValidLocation(Card card, int cardLocation){
-        if (cardLocation < 0 || cardLocation > 11) throw new IllegalArgumentException("Location out of bounds");
+        if (cardLocation < 0 || cardLocation > 7) throw new IllegalArgumentException("Location out of bounds");
         return (card.getAlliance() == COMPUTER && cardLocation >= 4) || (card.getAlliance() == PLAYER && cardLocation <= 3);
     }
 
     /**
-     * Returns a boolean stating whether the given location is occupied.
+     * Returns true if the location is occupied, false otherwise.
      * @param cardLocation The location being checked
      * @return Boolean stating whether the given location is occupied.
      */
     public boolean isLocationOccupied(int cardLocation){
-        if (cardLocations[cardLocation] != null) System.out.println("Location is occupied");
         return cardLocations[cardLocation] != null;
     }
 
     /**
-     * Places the provided card at the given location
+     * Places the provided card at the given location and lowers the player's mana accordingly.
      * @param card The card to be placed
      * @param location The location for the card to be placed
      */
@@ -81,7 +83,7 @@ public class Board {
     }
 
     /**
-     * Removes the card at the given location
+     * Removes the card at the given location by setting it to null.
      * @param location The location of the card to be removed
      */
     public void removeCardAtLocation(int location) {
@@ -119,5 +121,32 @@ public class Board {
      */
     public Computer getComputer() {
         return computer;
+    }
+
+    public void doComputerMove(){
+        //Increase number of turns and mana
+        computer.setNumberOfTurns(computer.getNumberOfTurns() + 1);
+        computer.setMana(computer.getMana() + computer.getNumberOfTurns());
+
+        //First check if all slots full and return if that's the case
+        boolean isRowFull = true;
+        for (int i = 4; i <= 7; i++){
+            if (!isLocationOccupied(i)) isRowFull = false;
+        }
+        if (isRowFull) return;
+
+        //Draw a random card.
+        Card card = computer.drawCard();
+
+        //Try to place the card at a random non-occupied location if has enough mana to play it, otherwise return.
+        int computerMoveLocation = rand.nextInt(4, 8);
+        while (isLocationOccupied(computerMoveLocation)) {
+            computerMoveLocation = rand.nextInt(4, 8);
+        }
+        if (computer.getMana() > card.getMana()) {
+            setCardAtLocation(card, computerMoveLocation);
+        } else {
+            return;
+        }
     }
 }

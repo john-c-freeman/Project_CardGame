@@ -21,27 +21,4 @@ public class Computer extends Player {
     public Computer(int health, int mana) {
         super(health, mana, Alliance.COMPUTER);
     }
-
-
-    /**
-     * Does a computer move.
-     */
-    public void doComputerMove() {
-        final Board board = new Board();
-        //Get a random card with mana less than or equal to the computer's mana.
-        Card card = getHand().get(rand.nextInt(5));
-        while (card.getMana() > getMana()) {
-            card = getHand().get(rand.nextInt(5));
-        }
-
-        //Place the card at a random non-occupied location.
-        int computerMoveLocation = rand.nextInt(4, 12);
-        while (!(board.isLocationOccupied(computerMoveLocation) && board.isValidLocation(card, computerMoveLocation))) {
-            computerMoveLocation = rand.nextInt(4, 12);
-        }
-        board.setCardAtLocation(card, computerMoveLocation);
-
-        //Attack the enemy card.
-        board.attackEnemy(card);
-    }
 }

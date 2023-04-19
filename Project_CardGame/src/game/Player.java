@@ -3,6 +3,7 @@ package game;
 import game.card.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -29,7 +30,7 @@ public class Player {
         this.mana = mana;
         this.alliance = alliance;
         initializeRandomDeck();
-        initializeHand();
+        //initializeHand();
     }
 
     /**
@@ -42,30 +43,28 @@ public class Player {
     }
 
     /**
-     * Initializes a deck of random cards.
-     * //TODO make more cards to complete this method
+     * Initializes a deck of 10 cards.
      */
     private void initializeRandomDeck() {
-        int numberOfUniqueCards = 6;
-        List<Card> uniqueCards = List.of(new Bear(alliance), new Wolf(alliance), new Squirrel(alliance), new Cat(alliance), new Crow(alliance), new Shark(alliance));
+        List<Card> uniqueCards = new ArrayList<>();
+        Collections.addAll(uniqueCards, new Bear(alliance), new Wolf(alliance), new Squirrel(alliance), new Cat(alliance), new Crow(alliance), new Shark(alliance),
+        new Owl(alliance), new Bobcat(alliance), new Hound(alliance), new Alligator(alliance));
         for (int i = 0; i < 10; i++) {
-            int r = rand.nextInt(numberOfUniqueCards);
+            int r = rand.nextInt(uniqueCards.size());
             deck.add(uniqueCards.get(r));
-            //uniqueCards.remove(r);
-            //numberOfUniqueCards--;
+            uniqueCards.remove(r);
         }
+
     }
 
     /**
-     * Draws a random card from the players deck
-     *
-     * @return A random card from the players deck
+     * Draws a random card from the players deck and adds it to the players hand
      */
     public Card drawCard() {
-        //TODO check if the card is already in the player's hand?
         int n = rand.nextInt(deck.size());
         Card drawnCard = deck.get(n);
         deck.remove(n);
+        hand.add(drawnCard);
         return drawnCard;
     }
 

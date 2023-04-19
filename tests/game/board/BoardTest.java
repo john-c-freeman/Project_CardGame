@@ -48,9 +48,6 @@ class BoardTest {
             assertEquals(wolf, board.getEnemyCard(bear));
             assertEquals(bear, board.getEnemyCard(wolf));
             Wolf wolf2 = new Wolf(computer.getAlliance());
-            int backRow = i + 8;
-            board.setCardAtLocation(wolf2, backRow);
-            assertEquals(bear, board.getEnemyCard(wolf2));
         }
     }
 
