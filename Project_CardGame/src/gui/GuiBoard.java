@@ -270,8 +270,8 @@ public class GuiBoard extends JFrame {
                 }
             }
         }
-        lblOpponentHealth.setText(Integer.toString(computer.getHealth()));
-        lblPlayerHealth.setText(Integer.toString(player.getHealth()));
+        lblOpponentHealth.setText("Computer Health: " + computer.getHealth());
+        lblPlayerHealth.setText("Player Health: " + player.getHealth());
     }
 
     /**
@@ -381,31 +381,36 @@ public class GuiBoard extends JFrame {
      * Writes to a file whether the player won or lost the game.
      * The file only contains one line as following:
      * Wins: {wins}, Losses: {losses};
+     *
      * @param gameWon
      */
-    private String writeWinsAndLosses(Boolean gameWon) {
-        String filePath = "src/game/gui/Resources/WinsAndLosses.txt";
-        String winsAndLosses = "";
+    private void writeWinsAndLosses(Boolean gameWon) {
+        String filePath = "Project_CardGame/src/gui/Resources/WinsAndLosses.txt";
         try (PrintWriter writer = new PrintWriter(new File(filePath))){
             //update games and losses according to if game is won or not
-            if (gameWon)writer.write("Wins: " + (wins++) + ", " + "Losses: " + losses);
-            else writer.write("Wins: " + wins + ", " + "Losses: " + (losses++));
+            if (gameWon)
+                writer.write("Wins: " + (wins + 1) + ", " + "Losses: " + losses);
+            else
+                writer.write("Wins: " + wins + ", " + "Losses: " + (losses + 1));
         } catch (FileNotFoundException e) {
             System.out.println("Error: could not find " + filePath);
         }
-
-        return winsAndLosses;
     }
 
+    /**
+     * Reads from a file whether the player won or lost the game.
+     * The file only contains one line as following:
+     * Wins: {wins}, Losses: {losses};
+     */
     private void readWinsAndLosses() {
-        String filePath = "src/game/gui/Resources/WinsAndLosses.txt";
+        String filePath = "Project_CardGame/src/gui/Resources/WinsAndLosses.txt";
         String winsAndLosses = "";
         try (Scanner reader = new Scanner(new File(filePath))){
             while(reader.hasNextLine())
                 winsAndLosses = reader.nextLine();
             String[] strings = winsAndLosses.split(":");
-            wins = Integer.parseInt(strings[1]);
-            losses = Integer.parseInt(strings[3]);
+            wins = Integer.parseInt(strings[1].substring(1, strings[1].indexOf(",")));
+            losses = Integer.parseInt(strings[2].substring(1));
         } catch (FileNotFoundException e) {
             System.out.println("Error: could not find " + filePath);
         }
